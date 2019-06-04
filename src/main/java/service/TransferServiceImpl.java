@@ -1,6 +1,7 @@
 package service;
 
 import db.DataStore;
+import exception.TransferNotFoundException;
 import model.Transfer;
 
 import java.math.BigDecimal;
@@ -15,7 +16,12 @@ public class TransferServiceImpl implements TransferService {
     }
     @Override
     public Transfer getTransfer(String id) {
-        return db.transfers.get(id);
+        Transfer transfer = db.transfers.get(id);
+        if (transfer != null) {
+            return transfer;
+        } else {
+            throw new TransferNotFoundException("Transfer " + id + " not found");
+        }
     }
 
     @Override

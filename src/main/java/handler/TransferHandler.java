@@ -1,5 +1,6 @@
 package handler;
 
+import exception.InsufficientFundsException;
 import model.Account;
 import model.Transfer;
 import service.AccountService;
@@ -39,6 +40,9 @@ public class TransferHandler {
             }
         } finally {
             lock.unlock();
+            if (transfer == null) {
+                throw new InsufficientFundsException("Insufficient funds");
+            }
             return transfer;
         }
 

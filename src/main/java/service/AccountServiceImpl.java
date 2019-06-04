@@ -1,6 +1,7 @@
 package service;
 
 import db.DataStore;
+import exception.AccountNotFoundException;
 import model.Account;
 
 import java.math.BigDecimal;
@@ -18,9 +19,9 @@ public class AccountServiceImpl implements AccountService {
     public Account getAccount(String id) {
         if (db.accounts.contains(id)) {
             return getAccountWithBalance(id);
+        } else {
+            throw new AccountNotFoundException("Account " + id + " not found");
         }
-
-        return null;
     }
 
     @Override

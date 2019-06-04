@@ -35,6 +35,8 @@ public class TransfersRoute {
 
             Transfer transfer = transferHandler.transfer(transferReq.source, transferReq.target, transferReq.amount);
 
+            res.status(201);
+
             return transfer;
         };
     }

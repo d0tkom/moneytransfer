@@ -15,7 +15,7 @@ public class DataStore {
         accounts.add("acc1");
         accounts.add("acc2");
 
-        Transfer t1 = new Transfer("t1", "acc1", "acc2", new BigDecimal(100));
+        Transfer t1 = new Transfer("t1", "acc1", "acc2", new BigDecimal(10000));
         transfers.put(t1.id, t1);
     }
 }
