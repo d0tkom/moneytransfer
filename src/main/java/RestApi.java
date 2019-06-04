@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import db.DataStore;
 import handler.AccountHandler;
 import handler.TransferHandler;
@@ -10,11 +12,11 @@ import service.TransferServiceImpl;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
-import static util.JsonUtil.json;
 
 public class RestApi {
     private final TransfersRoute transfersRoute;
     private final AccountsRoute accountsRoute;
+    private final Gson gson;
 
     public RestApi(DataStore db) {
         final TransferService transferService = new TransferServiceImpl(db);
@@ -25,6 +27,8 @@ public class RestApi {
 
         transfersRoute = new TransfersRoute(transferHandler);
         accountsRoute = new AccountsRoute(accountHandler);
+
+        gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     public void listen() {
@@ -33,14 +37,14 @@ public class RestApi {
     }
 
     public void setupAccountsEndpoint() {
-        get("/accounts", (req, res) -> accountsRoute.getAccounts(), json());
-        get("/accounts/:id", (req, res) -> accountsRoute.getAccountById(), json());
+        get("/accounts", accountsRoute.getAccounts(), gson::toJson);
+        get("/accounts/:id", accountsRoute.getAccountById(), gson::toJson);
     }
 
     public void setupTransfersEndpoint() {
-        get("/transfers", (req, res) -> transfersRoute.getTransfers(), json());
-        get("/transfers/:id", (req, res) -> transfersRoute.getTransferById(), json());
+        get("/transfers", transfersRoute.getTransfers(), gson::toJson);
+        get("/transfers/:id", transfersRoute.getTransferById(), gson::toJson);
 
-        post("/transfers", (req, res) -> transfersRoute.postTransfer(), json());
+        post("/transfers", transfersRoute.postTransfer(), gson::toJson);
     }
 }
