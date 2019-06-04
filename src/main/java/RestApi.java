@@ -1,7 +1,8 @@
-import com.google.gson.Gson;
 import db.DataStore;
+import handler.AccountHandler;
 import handler.TransferHandler;
-import model.Transfer;
+import route.AccountsRoute;
+import route.TransfersRoute;
 import service.AccountService;
 import service.AccountServiceImpl;
 import service.TransferService;
@@ -12,50 +13,34 @@ import static spark.Spark.post;
 import static util.JsonUtil.json;
 
 public class RestApi {
-    private final TransferService transferService;
-    private final AccountService accountService;
-    private final TransferHandler transferHandler;
-    private final Gson gson;
+    private final TransfersRoute transfersRoute;
+    private final AccountsRoute accountsRoute;
 
     public RestApi(DataStore db) {
-        transferService = new TransferServiceImpl(db);
-        accountService = new AccountServiceImpl(db);
-        transferHandler = new TransferHandler(accountService, transferService);
-        gson = new Gson();
+        final TransferService transferService = new TransferServiceImpl(db);
+        final AccountService accountService = new AccountServiceImpl(db);
+
+        final TransferHandler transferHandler = new TransferHandler(accountService, transferService);
+        final AccountHandler accountHandler = new AccountHandler(accountService);
+
+        transfersRoute = new TransfersRoute(transferHandler);
+        accountsRoute = new AccountsRoute(accountHandler);
     }
 
     public void listen() {
-        setupAccountsEndpoints();
-        setupTransfersEndpoints();
+        setupAccountsEndpoint();
+        setupTransfersEndpoint();
     }
 
-    public void setupAccountsEndpoints() {
-        get("/accounts", (req, res) -> accountService.getAccounts(), json());
-
-        get("/accounts/:id", (req, res) -> {
-            String id = req.params(":id");
-
-            return accountService.getAccount(id);
-        }, json());
+    public void setupAccountsEndpoint() {
+        get("/accounts", (req, res) -> accountsRoute.getAccounts(), json());
+        get("/accounts/:id", (req, res) -> accountsRoute.getAccountById(), json());
     }
 
-    public void setupTransfersEndpoints() {
+    public void setupTransfersEndpoint() {
+        get("/transfers", (req, res) -> transfersRoute.getTransfers(), json());
+        get("/transfers/:id", (req, res) -> transfersRoute.getTransferById(), json());
 
-        get("/transfers", (req, res) -> transferHandler.getTransfers(), json());
-        get("/transfers/:id", (req, res) -> {
-            String id = req.params(":id");
-
-            Transfer transfer = transferHandler.getTransfer(id);
-
-            return transfer;
-        }, json());
-
-        post("/transfers", (req, res) -> {
-            Transfer transferReq = gson.fromJson(req.body(), Transfer.class);
-
-            Transfer transfer = transferHandler.transfer(transferReq.source, transferReq.target, transferReq.amount);
-
-            return transfer;
-        }, json());
+        post("/transfers", (req, res) -> transfersRoute.postTransfer(), json());
     }
 }
