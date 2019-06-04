@@ -17,9 +17,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getAccount(String id) {
         if (db.accounts.contains(id)) {
-            Account acc = getAccount(id);
-
-            return acc;
+            return getAccountWithBalance(id);
         }
 
         return null;
