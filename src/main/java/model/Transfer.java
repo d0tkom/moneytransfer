@@ -1,6 +1,7 @@
 package model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Transfer {
@@ -8,12 +9,14 @@ public class Transfer {
     public final String source;
     public final String target;
     public final BigDecimal amount;
+    public final LocalDateTime created;
 
-    public Transfer(String id, String source, String target, BigDecimal amount) {
+    public Transfer(String id, String source, String target, BigDecimal amount, LocalDateTime created) {
         this.id = id;
         this.source = source;
         this.target = target;
         this.amount = amount;
+        this.created = created;
     }
 
     @Override
@@ -24,12 +27,13 @@ public class Transfer {
         return Objects.equals(id, that.id) &&
                 Objects.equals(source, that.source) &&
                 Objects.equals(target, that.target) &&
-                Objects.equals(amount, that.amount);
+                Objects.equals(amount, that.amount) &&
+                Objects.equals(created, that.created);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, source, target, amount);
+        return Objects.hash(id, source, target, amount, created);
     }
 
     @Override
@@ -39,6 +43,7 @@ public class Transfer {
                 ", source=" + source +
                 ", target=" + target +
                 ", amount=" + amount +
+                ", created=" + created +
                 "}";
     }
 }

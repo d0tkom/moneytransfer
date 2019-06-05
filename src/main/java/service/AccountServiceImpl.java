@@ -42,8 +42,8 @@ public class AccountServiceImpl implements AccountService {
 
     private Account getAccountWithBalance(String id) {
         BigDecimal balance = db.transfers.values().stream()
-                .map(t -> Objects.equals(t.source, id) ? t.amount.negate() : Objects.equals(t.target, id) ? t.amount : new BigDecimal(0))
-                .reduce(new BigDecimal(0), BigDecimal::add);
+                .map(t -> Objects.equals(t.source, id) ? t.amount.negate() : Objects.equals(t.target, id) ? t.amount : BigDecimal.ZERO)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return new Account(id, balance);
     }

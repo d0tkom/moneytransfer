@@ -12,6 +12,7 @@ import service.TransferService;
 import service.TransferServiceImpl;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
@@ -20,7 +21,7 @@ public class TransferHandlerTest {
     private TransferHandler subject;
     private AccountService accountService;
     private BigDecimal acc1Balance = new BigDecimal(1000);
-    private BigDecimal acc2Balance = new BigDecimal(0);
+    private BigDecimal acc2Balance = BigDecimal.ZERO;
 
     @Before
     public void setUp() {
@@ -29,7 +30,7 @@ public class TransferHandlerTest {
         db.accounts.add("acc1");
         db.accounts.add("acc2");
 
-        db.transfers.put("id1", new Transfer("id1", null, "acc1", acc1Balance));
+        db.transfers.put("id1", new Transfer("id1", null, "acc1", acc1Balance, LocalDateTime.now()));
 
         accountService = new AccountServiceImpl(db);
         TransferService transferService = new TransferServiceImpl(db);
@@ -65,7 +66,7 @@ public class TransferHandlerTest {
 
     @Test
     public void transferZero() {
-        Transfer t = subject.transfer("acc1", "acc2", new BigDecimal(0));
+        Transfer t = subject.transfer("acc1", "acc2", BigDecimal.ZERO);
 
         Account acc1 = accountService.getAccount("acc1");
         Account acc2 = accountService.getAccount("acc2");

@@ -5,6 +5,7 @@ import exception.TransferNotFoundException;
 import model.Transfer;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public Transfer transfer(String source, String target, BigDecimal amount) {
         String uuid = UUID.randomUUID().toString();
-        Transfer transfer = new Transfer(uuid, source,target, amount);
+        Transfer transfer = new Transfer(uuid, source,target, amount, LocalDateTime.now());
 
         db.transfers.put(uuid, transfer);
 

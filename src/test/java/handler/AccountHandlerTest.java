@@ -31,12 +31,12 @@ public class AccountHandlerTest {
 
     @Test
     public void testCreateAccountZeroBalance() {
-        Account acc = subject.createAccount(new BigDecimal(0));
+        Account acc = subject.createAccount(BigDecimal.ZERO);
 
         Account stored = subject.getAccount(acc.id);
 
         assertEquals(stored, acc);
-        assertEquals(stored.balance, new BigDecimal(0));
+        assertEquals(stored.balance, BigDecimal.ZERO);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class AccountHandlerTest {
         Account stored = subject.getAccount(acc.id);
 
         assertEquals(stored, acc);
-        assertEquals(stored.balance, new BigDecimal(0));
+        assertEquals(stored.balance, BigDecimal.ZERO);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class AccountHandlerTest {
         Account stored = subject.getAccount(acc.id);
 
         assertEquals(stored, acc);
-        assertEquals(stored.balance, new BigDecimal(0));
+        assertEquals(stored.balance, BigDecimal.ZERO);
     }
 
     @Test(expected = AccountNotFoundException.class)
@@ -78,7 +78,7 @@ public class AccountHandlerTest {
 
     @Test
     public void createMultipleAccountsNoError() {
-        Account acc1 = subject.createAccount(new BigDecimal(0));
+        Account acc1 = subject.createAccount(BigDecimal.ZERO);
         Account acc2 = subject.createAccount(new BigDecimal(100));
         Account acc3 = subject.createAccount(new BigDecimal(-100));
         Account acc4 = subject.createAccount(null);

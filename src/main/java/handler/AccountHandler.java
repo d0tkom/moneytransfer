@@ -23,10 +23,10 @@ public class AccountHandler {
     public Account createAccount(BigDecimal balance) {
         String id = accountService.createAccount();
 
-        if (balance != null && balance.compareTo(new BigDecimal(0)) > -1) {
+        if (balance != null && balance.compareTo(BigDecimal.ZERO) > -1) {
             transferService.transfer(null, id, balance);
         } else {
-            balance = new BigDecimal(0);
+            balance = BigDecimal.ZERO;
         }
 
         return new Account(id, balance);
