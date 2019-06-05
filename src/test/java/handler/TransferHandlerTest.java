@@ -27,8 +27,8 @@ public class TransferHandlerTest {
     public void setUp() {
         DataStore db = new DataStore();
 
-        db.accounts.add("acc1");
-        db.accounts.add("acc2");
+        db.accounts.put("acc1", LocalDateTime.now());
+        db.accounts.put("acc2", LocalDateTime.now());
 
         db.transfers.put("id1", new Transfer("id1", null, "acc1", acc1Balance, LocalDateTime.now()));
 

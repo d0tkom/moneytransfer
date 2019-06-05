@@ -2,13 +2,12 @@ package db;
 
 import model.Transfer;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DataStore {
-    public final Set<String> accounts = ConcurrentHashMap.newKeySet();
+    public final Map<String, LocalDateTime> accounts = new ConcurrentHashMap<>();
     public final Map<String, Transfer> transfers = new ConcurrentHashMap<>();
 
     public DataStore() {

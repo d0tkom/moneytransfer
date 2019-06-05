@@ -2,14 +2,13 @@ package service;
 
 import db.DataStore;
 import exception.AccountNotFoundException;
+import javafx.util.Pair;
 import model.Account;
 import org.junit.Before;
 import org.junit.Test;
-import service.AccountService;
-import service.AccountServiceImpl;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,11 +25,14 @@ public class AccountServiceTest {
 
     @Test
     public void createAndGetExistingAccountNoError() {
-        String accId = subject.createAccount();
+        Pair<String, LocalDateTime> acc = subject.createAccount();
+        String accId = acc.getKey();
+        LocalDateTime created = acc.getValue();
 
-        String storedId = subject.getAccount(accId).id;
+        Account stored = subject.getAccount(accId);
 
-        assertEquals(accId, storedId);
+        assertEquals(accId, stored.id);
+        assertEquals(created, stored.created);
     }
 
     @Test(expected = AccountNotFoundException.class)
@@ -42,9 +44,13 @@ public class AccountServiceTest {
 
     @Test
     public void createMultipleAccountsNoError() {
-        String acc1Id = subject.createAccount();
-        String acc2Id = subject.createAccount();
-        String acc3Id = subject.createAccount();
+        Pair<String, LocalDateTime> acc1 = subject.createAccount();
+        Pair<String, LocalDateTime> acc2 = subject.createAccount();
+        Pair<String, LocalDateTime> acc3 = subject.createAccount();
+
+        String acc1Id = acc1.getKey();
+        String acc2Id = acc2.getKey();
+        String acc3Id = acc3.getKey();
 
         Collection<Account> accounts = subject.getAccounts();
 
