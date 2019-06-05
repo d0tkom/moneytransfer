@@ -6,5 +6,6 @@ import java.util.Collection;
 
 public interface AccountService {
     Account getAccount(String id);
+    String createAccount();
     Collection<Account> getAccounts();
 }

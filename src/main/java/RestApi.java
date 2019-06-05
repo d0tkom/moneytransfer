@@ -24,7 +24,7 @@ public class RestApi {
         final AccountService accountService = new AccountServiceImpl(db);
 
         final TransferHandler transferHandler = new TransferHandler(accountService, transferService);
-        final AccountHandler accountHandler = new AccountHandler(accountService);
+        final AccountHandler accountHandler = new AccountHandler(accountService, transferService);
 
         transfersRoute = new TransfersRoute(transferHandler);
         accountsRoute = new AccountsRoute(accountHandler);

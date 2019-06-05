@@ -30,6 +30,10 @@ public class TransferHandler {
     }
 
     public Transfer transfer(String sourceId, String targetId, BigDecimal amount) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            return null;
+        }
+
         Transfer transfer = null;
 
         lock.lock();
