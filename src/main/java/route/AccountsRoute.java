@@ -24,6 +24,8 @@ public class AccountsRoute {
         return (req, res) -> {
             BigDecimal balance =  gson.fromJson(req.body(), BigDecimal.class);
 
+            res.status(201);
+
             return accountHandler.createAccount(balance);
         };
     }
