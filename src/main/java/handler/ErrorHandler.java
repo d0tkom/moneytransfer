@@ -8,7 +8,7 @@ import exception.TransferNotFoundException;
 import model.ErrorResponse;
 import org.eclipse.jetty.http.HttpStatus;
 
-public class ExceptionHandler {
+public class ErrorHandler {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
     public spark.ExceptionHandler handleException() {
