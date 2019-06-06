@@ -1,6 +1,7 @@
 package route;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import handler.TransferHandler;
 import model.Transfer;
 import spark.Request;
@@ -57,5 +58,11 @@ public class TransfersRoute {
         return json.map(this::fromJson).orElseThrow(() -> new IllegalArgumentException("Could not parse json"));
     }
 
-    private Transfer fromJson(String json) { return gson.fromJson(json, Transfer.class); }
+    private Transfer fromJson(String json) {
+        try {
+            return gson.fromJson(json, Transfer.class);
+        } catch (JsonParseException e) {
+            throw new IllegalArgumentException("Could not parse json");
+        }
+    }
 }

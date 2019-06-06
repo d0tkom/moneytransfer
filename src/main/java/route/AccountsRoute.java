@@ -1,6 +1,7 @@
 package route;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import handler.AccountHandler;
 import model.AccountRequest;
 import spark.Request;
@@ -64,5 +65,11 @@ public class AccountsRoute {
         return json.map(this::fromJson).orElse(new AccountRequest(BigDecimal.ZERO));
     }
 
-    private AccountRequest fromJson(String json) { return gson.fromJson(json, AccountRequest.class); }
+    private AccountRequest fromJson(String json) {
+        try {
+            return gson.fromJson(json, AccountRequest.class);
+        } catch (JsonParseException e) {
+            throw new IllegalArgumentException("Could not parse json");
+        }
+    }
 }
