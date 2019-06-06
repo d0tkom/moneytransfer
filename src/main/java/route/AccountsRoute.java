@@ -17,13 +17,18 @@ public class AccountsRoute {
     }
 
     public Route getAccounts() {
-        return (req, res) -> accountHandler.getAccounts();
+        return (req, res) -> {
+            res.type("application/json");
+
+            return accountHandler.getAccounts();
+        };
     }
 
     public Route postAccounts() {
         return (req, res) -> {
             BigDecimal balance =  gson.fromJson(req.body(), BigDecimal.class);
 
+            res.type("application/json");
             res.status(201);
 
             return accountHandler.createAccount(balance);
@@ -34,6 +39,8 @@ public class AccountsRoute {
         return (req, res) -> {
             String id = req.params(":id");
 
+            res.type("application/json");
+
             return accountHandler.getAccount(id);
         };
     }
@@ -41,6 +48,8 @@ public class AccountsRoute {
     public Route getTransfersByAccountId() {
         return (req, res) -> {
             String id = req.params(":id");
+
+            res.type("application/json");
 
             return accountHandler.getTransfersByAccountId(id);
         };

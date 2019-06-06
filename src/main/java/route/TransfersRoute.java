@@ -16,7 +16,11 @@ public class TransfersRoute {
     }
 
     public Route getTransfers() {
-        return (req, res) -> transferHandler.getTransfers();
+        return (req, res) -> {
+            res.type("application/json");
+
+            return transferHandler.getTransfers();
+        };
     }
 
     public Route getTransferById() {
@@ -24,6 +28,8 @@ public class TransfersRoute {
             String id = req.params(":id");
 
             Transfer transfer = transferHandler.getTransfer(id);
+
+            res.type("application/json");
 
             return transfer;
         };
@@ -35,6 +41,7 @@ public class TransfersRoute {
 
             Transfer transfer = transferHandler.transfer(transferReq.source, transferReq.target, transferReq.amount);
 
+            res.type("application/json");
             res.status(201);
 
             return transfer;
