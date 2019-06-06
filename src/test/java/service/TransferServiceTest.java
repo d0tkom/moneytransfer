@@ -7,12 +7,9 @@ import model.Account;
 import model.Transfer;
 import org.junit.Before;
 import org.junit.Test;
-import service.AccountService;
-import service.AccountServiceImpl;
-import service.TransferService;
-import service.TransferServiceImpl;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
@@ -20,15 +17,11 @@ import static org.junit.Assert.assertTrue;
 
 public class TransferServiceTest {
     private TransferService subject;
+    private DataStore db;
 
     @Before
     public void setUp() {
-        DataStore db = new DataStore();
-
-//        db.accounts.add("acc1");
-//        db.accounts.add("acc2");
-//
-//        db.transfers.put("t1", new Transfer("t1", null, "acc1", new BigDecimal(1000)));
+        db = new DataStore();
 
         subject = new TransferServiceImpl(db);
     }
@@ -65,6 +58,10 @@ public class TransferServiceTest {
 
     @Test
     public void getTransfersByAccountId() {
+        db.accounts.put("acc1", new Account("acc1", LocalDateTime.now()));
+        db.accounts.put("acc2", new Account("acc1", LocalDateTime.now()));
+        db.accounts.put("acc3", new Account("acc1", LocalDateTime.now()));
+
         Transfer t1 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
         Transfer t2 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
         Transfer t3 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
@@ -97,4 +94,8 @@ public class TransferServiceTest {
         assertTrue(acc3Transfers.stream().noneMatch(a -> a.equals(t6)));
     }
 
+    @Test (expected = AccountNotFoundException.class)
+    public void getTransfersByAccountIdThatDoesntExist() {
+        subject.getTransfersByAccountId("acc1");
+    }
 }

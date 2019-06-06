@@ -1,6 +1,7 @@
 package service;
 
 import db.DataStore;
+import exception.AccountNotFoundException;
 import exception.TransferNotFoundException;
 import model.Transfer;
 
@@ -35,6 +36,9 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public Collection<Transfer> getTransfersByAccountId(String accountId) {
+        if (!db.accounts.containsKey(accountId))
+            throw new AccountNotFoundException("Account " + accountId + " not found");
+
         return db.transfers.values().stream().filter(t -> Objects.equals(t.source, accountId) || Objects.equals(t.target, accountId)).collect(Collectors.toList());
     }
 

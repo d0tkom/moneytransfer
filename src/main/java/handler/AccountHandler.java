@@ -25,7 +25,7 @@ public class AccountHandler {
     public AccountResponse createAccount(BigDecimal balance) {
         Account account = accountService.createAccount();
 
-        if (balance != null && balance.compareTo(BigDecimal.ZERO) > -1) {
+        if (balance != null && balance.compareTo(BigDecimal.ZERO) > 0) {
             transferService.transfer(null, account.id, balance);
         } else {
             balance = BigDecimal.ZERO;
