@@ -1,12 +1,11 @@
 package handler;
 
-import javafx.util.Pair;
 import model.Account;
+import model.AccountWithBalance;
 import service.AccountService;
 import service.TransferService;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 public class AccountHandler {
@@ -18,26 +17,23 @@ public class AccountHandler {
         this.transferService = transferService;
     }
 
-    public Account getAccount(String id) {
+    public AccountWithBalance getAccount(String id) {
         return accountService.getAccount(id);
     }
 
-    public Account createAccount(BigDecimal balance) {
-        Pair<String, LocalDateTime> account = accountService.createAccount();
-
-        String id = account.getKey();
-        LocalDateTime created = account.getValue();
+    public AccountWithBalance createAccount(BigDecimal balance) {
+        Account account = accountService.createAccount();
 
         if (balance != null && balance.compareTo(BigDecimal.ZERO) > -1) {
-            transferService.transfer(null, id, balance);
+            transferService.transfer(null, account.id, balance);
         } else {
             balance = BigDecimal.ZERO;
         }
 
-        return new Account(id, balance, created);
+        return new AccountWithBalance(account.id, account.created, balance);
     }
 
-    public Collection<Account> getAccounts() {
+    public Collection<AccountWithBalance> getAccounts() {
         return accountService.getAccounts();
     }
 }

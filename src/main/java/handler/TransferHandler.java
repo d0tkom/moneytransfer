@@ -1,7 +1,7 @@
 package handler;
 
 import exception.InsufficientFundsException;
-import model.Account;
+import model.AccountWithBalance;
 import model.Transfer;
 import service.AccountService;
 import service.TransferService;
@@ -38,7 +38,7 @@ public class TransferHandler {
 
         lock.lock();
         try {
-            Account source = accountService.getAccount(sourceId);
+            AccountWithBalance source = accountService.getAccount(sourceId);
             if (source != null && source.balance.compareTo(amount) > -1) {
                 transfer = transferService.transfer(sourceId, targetId, amount);
             }

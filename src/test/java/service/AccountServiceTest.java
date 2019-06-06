@@ -2,8 +2,8 @@ package service;
 
 import db.DataStore;
 import exception.AccountNotFoundException;
-import javafx.util.Pair;
 import model.Account;
+import model.AccountWithBalance;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,14 +25,12 @@ public class AccountServiceTest {
 
     @Test
     public void createAndGetExistingAccountNoError() {
-        Pair<String, LocalDateTime> acc = subject.createAccount();
-        String accId = acc.getKey();
-        LocalDateTime created = acc.getValue();
+        Account acc = subject.createAccount();
 
-        Account stored = subject.getAccount(accId);
+        Account stored = subject.getAccount(acc.id);
 
-        assertEquals(accId, stored.id);
-        assertEquals(created, stored.created);
+        assertEquals(acc.id, stored.id);
+        assertEquals(acc.created, stored.created);
     }
 
     @Test(expected = AccountNotFoundException.class)
@@ -44,20 +42,16 @@ public class AccountServiceTest {
 
     @Test
     public void createMultipleAccountsNoError() {
-        Pair<String, LocalDateTime> acc1 = subject.createAccount();
-        Pair<String, LocalDateTime> acc2 = subject.createAccount();
-        Pair<String, LocalDateTime> acc3 = subject.createAccount();
+        Account acc1 = subject.createAccount();
+        Account acc2 = subject.createAccount();
+        Account acc3 = subject.createAccount();
 
-        String acc1Id = acc1.getKey();
-        String acc2Id = acc2.getKey();
-        String acc3Id = acc3.getKey();
-
-        Collection<Account> accounts = subject.getAccounts();
+        Collection<AccountWithBalance> accounts = subject.getAccounts();
 
         assertEquals(3, accounts.size());
-        assertTrue(accounts.stream().anyMatch(a -> a.id.equals(acc1Id)));
-        assertTrue(accounts.stream().anyMatch(a -> a.id.equals(acc2Id)));
-        assertTrue(accounts.stream().anyMatch(a -> a.id.equals(acc3Id)));
+        assertTrue(accounts.stream().anyMatch(a -> a.id.equals(acc1.id)));
+        assertTrue(accounts.stream().anyMatch(a -> a.id.equals(acc2.id)));
+        assertTrue(accounts.stream().anyMatch(a -> a.id.equals(acc3.id)));
     }
 
 }

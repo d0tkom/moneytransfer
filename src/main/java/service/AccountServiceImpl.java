@@ -2,8 +2,8 @@ package service;
 
 import db.DataStore;
 import exception.AccountNotFoundException;
-import javafx.util.Pair;
 import model.Account;
+import model.AccountWithBalance;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,9 +20,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account getAccount(String id) {
+    public AccountWithBalance getAccount(String id) {
         if (db.accounts.containsKey(id)) {
-            LocalDateTime created = db.accounts.get(id);
+            LocalDateTime created = db.accounts.get(id).created;
+
             return getAccountWithBalance(id, created);
         } else {
             throw new AccountNotFoundException("Account " + id + " not found");
@@ -30,25 +31,27 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Pair<String, LocalDateTime> createAccount() {
+    public Account createAccount() {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime created = LocalDateTime.now();
 
-        db.accounts.put(uuid, created);
+        Account account = new Account(uuid, created);
 
-        return new Pair<>(uuid, created);
+        db.accounts.put(uuid, account);
+
+        return account;
     }
 
     @Override
-    public Collection<Account> getAccounts() {
-        return db.accounts.entrySet().stream().map((e) -> getAccountWithBalance(e.getKey(), e.getValue())).collect(Collectors.toList());
+    public Collection<AccountWithBalance> getAccounts() {
+        return db.accounts.values().stream().map((a) -> getAccountWithBalance(a.id, a.created)).collect(Collectors.toList());
     }
 
-    private Account getAccountWithBalance(String id, LocalDateTime created) {
+    private AccountWithBalance getAccountWithBalance(String id, LocalDateTime created) {
         BigDecimal balance = db.transfers.values().stream()
                 .map(t -> Objects.equals(t.source, id) ? t.amount.negate() : Objects.equals(t.target, id) ? t.amount : BigDecimal.ZERO)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return new Account(id, balance, created);
+        return new AccountWithBalance(id, created, balance);
     }
 }

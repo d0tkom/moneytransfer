@@ -1,13 +1,12 @@
 package service;
 
-import javafx.util.Pair;
 import model.Account;
+import model.AccountWithBalance;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 public interface AccountService {
-    Account getAccount(String id);
-    Pair<String, LocalDateTime> createAccount();
-    Collection<Account> getAccounts();
+    AccountWithBalance getAccount(String id);
+    Account createAccount();
+    Collection<AccountWithBalance> getAccounts();
 }
