@@ -3,7 +3,10 @@ package route;
 import com.google.gson.Gson;
 import handler.TransferHandler;
 import model.Transfer;
+import spark.Request;
 import spark.Route;
+
+import java.util.Optional;
 
 public class TransfersRoute {
     private final TransferHandler transferHandler;
@@ -37,7 +40,7 @@ public class TransfersRoute {
 
     public Route postTransfer() {
         return (req, res) -> {
-            Transfer transferReq = gson.fromJson(req.body(), Transfer.class);
+            Transfer transferReq = transferFromRequest(req);
 
             Transfer transfer = transferHandler.transfer(transferReq.source, transferReq.target, transferReq.amount);
 
@@ -47,4 +50,12 @@ public class TransfersRoute {
             return transfer;
         };
     }
+
+    private Transfer transferFromRequest(Request req) {
+        Optional<String> json = Optional.of(req.body());
+
+        return json.map(this::fromJson).orElseThrow(() -> new IllegalArgumentException("Could not parse json"));
+    }
+
+    private Transfer fromJson(String json) { return gson.fromJson(json, Transfer.class); }
 }

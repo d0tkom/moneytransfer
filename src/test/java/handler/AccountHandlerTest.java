@@ -3,7 +3,7 @@ package handler;
 import db.DataStore;
 import exception.AccountNotFoundException;
 import model.Account;
-import model.AccountWithBalance;
+import model.AccountResponse;
 import org.junit.Before;
 import org.junit.Test;
 import service.AccountService;
@@ -34,7 +34,7 @@ public class AccountHandlerTest {
     public void testCreateAccountZeroBalance() {
         Account acc = subject.createAccount(BigDecimal.ZERO);
 
-        AccountWithBalance stored = subject.getAccount(acc.id);
+        AccountResponse stored = subject.getAccount(acc.id);
 
         assertEquals(stored, acc);
         assertEquals(stored.balance, BigDecimal.ZERO);
@@ -44,7 +44,7 @@ public class AccountHandlerTest {
     public void testCreateAccountWithBalance() {
         Account acc = subject.createAccount(new BigDecimal(100));
 
-        AccountWithBalance stored = subject.getAccount(acc.id);
+        AccountResponse stored = subject.getAccount(acc.id);
 
         assertEquals(stored, acc);
         assertEquals(stored.balance, new BigDecimal(100));
@@ -54,7 +54,7 @@ public class AccountHandlerTest {
     public void testCreateAccountNullBalance() {
         Account acc = subject.createAccount(null);
 
-        AccountWithBalance stored = subject.getAccount(acc.id);
+        AccountResponse stored = subject.getAccount(acc.id);
 
         assertEquals(stored, acc);
         assertEquals(stored.balance, BigDecimal.ZERO);
@@ -64,7 +64,7 @@ public class AccountHandlerTest {
     public void testCreateAccountNegativeBalance() {
         Account acc = subject.createAccount(new BigDecimal(-100));
 
-        AccountWithBalance stored = subject.getAccount(acc.id);
+        AccountResponse stored = subject.getAccount(acc.id);
 
         assertEquals(stored, acc);
         assertEquals(stored.balance, BigDecimal.ZERO);
@@ -84,7 +84,7 @@ public class AccountHandlerTest {
         Account acc3 = subject.createAccount(new BigDecimal(-100));
         Account acc4 = subject.createAccount(null);
 
-        Collection<AccountWithBalance> accounts = subject.getAccounts();
+        Collection<AccountResponse> accounts = subject.getAccounts();
 
         assertEquals(4, accounts.size());
         assertTrue(accounts.stream().anyMatch(a -> a.equals(acc1)));

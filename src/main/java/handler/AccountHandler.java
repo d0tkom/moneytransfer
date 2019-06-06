@@ -1,7 +1,7 @@
 package handler;
 
 import model.Account;
-import model.AccountWithBalance;
+import model.AccountResponse;
 import model.Transfer;
 import service.AccountService;
 import service.TransferService;
@@ -18,11 +18,11 @@ public class AccountHandler {
         this.transferService = transferService;
     }
 
-    public AccountWithBalance getAccount(String id) {
+    public AccountResponse getAccount(String id) {
         return accountService.getAccount(id);
     }
 
-    public AccountWithBalance createAccount(BigDecimal balance) {
+    public AccountResponse createAccount(BigDecimal balance) {
         Account account = accountService.createAccount();
 
         if (balance != null && balance.compareTo(BigDecimal.ZERO) > -1) {
@@ -31,10 +31,10 @@ public class AccountHandler {
             balance = BigDecimal.ZERO;
         }
 
-        return new AccountWithBalance(account.id, account.created, balance);
+        return new AccountResponse(account.id, account.created, balance);
     }
 
-    public Collection<AccountWithBalance> getAccounts() {
+    public Collection<AccountResponse> getAccounts() {
         return accountService.getAccounts();
     }
 

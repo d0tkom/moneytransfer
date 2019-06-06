@@ -3,7 +3,7 @@ package handler;
 import db.DataStore;
 import exception.InsufficientFundsException;
 import model.Account;
-import model.AccountWithBalance;
+import model.AccountResponse;
 import model.Transfer;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,8 +45,8 @@ public class TransferHandlerTest {
 
         Transfer stored = subject.getTransfer(t.id);
 
-        AccountWithBalance acc1 = accountService.getAccount("acc1");
-        AccountWithBalance acc2 = accountService.getAccount("acc2");
+        AccountResponse acc1 = accountService.getAccount("acc1");
+        AccountResponse acc2 = accountService.getAccount("acc2");
 
         assertEquals(t, stored);
         assertEquals(acc1Balance.add(new BigDecimal(-100)), acc1.balance);
@@ -57,8 +57,8 @@ public class TransferHandlerTest {
     public void transferNegative() {
         Transfer t = subject.transfer("acc1", "acc2", new BigDecimal(-100));
 
-        AccountWithBalance acc1 = accountService.getAccount("acc1");
-        AccountWithBalance acc2 = accountService.getAccount("acc2");
+        AccountResponse acc1 = accountService.getAccount("acc1");
+        AccountResponse acc2 = accountService.getAccount("acc2");
 
         assertEquals(t, null);
         assertEquals(acc1Balance, acc1.balance);
@@ -69,8 +69,8 @@ public class TransferHandlerTest {
     public void transferZero() {
         Transfer t = subject.transfer("acc1", "acc2", BigDecimal.ZERO);
 
-        AccountWithBalance acc1 = accountService.getAccount("acc1");
-        AccountWithBalance acc2 = accountService.getAccount("acc2");
+        AccountResponse acc1 = accountService.getAccount("acc1");
+        AccountResponse acc2 = accountService.getAccount("acc2");
 
         assertEquals(t, null);
         assertEquals(acc1Balance, acc1.balance);
@@ -81,8 +81,8 @@ public class TransferHandlerTest {
     public void transferNull() {
         Transfer t = subject.transfer("acc1", "acc2", null);
 
-        AccountWithBalance acc1 = accountService.getAccount("acc1");
-        AccountWithBalance acc2 = accountService.getAccount("acc2");
+        AccountResponse acc1 = accountService.getAccount("acc1");
+        AccountResponse acc2 = accountService.getAccount("acc2");
 
         assertEquals(t, null);
         assertEquals(acc1Balance, acc1.balance);
@@ -99,8 +99,8 @@ public class TransferHandlerTest {
 
         Collection<Transfer> transfers = subject.getTransfers();
 
-        AccountWithBalance acc1 = accountService.getAccount("acc1");
-        AccountWithBalance acc2 = accountService.getAccount("acc2");
+        AccountResponse acc1 = accountService.getAccount("acc1");
+        AccountResponse acc2 = accountService.getAccount("acc2");
 
         assertEquals(t1, stored1);
         assertEquals(t2, stored2);

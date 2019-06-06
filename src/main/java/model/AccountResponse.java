@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class AccountWithBalance extends  Account {
+public class AccountResponse extends  Account {
     public final BigDecimal balance;
 
-    public AccountWithBalance(String id, LocalDateTime created, BigDecimal balance) {
+    public AccountResponse(String id, LocalDateTime created, BigDecimal balance) {
         super(id, created);
 
         this.balance = balance;
@@ -17,7 +17,7 @@ public class AccountWithBalance extends  Account {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AccountWithBalance that = (AccountWithBalance)o;
+        AccountResponse that = (AccountResponse)o;
         return Objects.equals(id, that.id) && Objects.equals(balance, that.balance) && Objects.equals(created, that.created);
     }
 
@@ -28,7 +28,7 @@ public class AccountWithBalance extends  Account {
 
     @Override
     public String toString() {
-        return "Account{" +
+        return "AccountResponse{" +
                 "id=" + id +
                 ", balance=" + balance +
                 ", created=" + created +

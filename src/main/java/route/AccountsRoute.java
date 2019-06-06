@@ -2,9 +2,12 @@ package route;
 
 import com.google.gson.Gson;
 import handler.AccountHandler;
+import model.AccountRequest;
+import spark.Request;
 import spark.Route;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public class AccountsRoute {
     private final AccountHandler accountHandler;
@@ -26,12 +29,12 @@ public class AccountsRoute {
 
     public Route postAccounts() {
         return (req, res) -> {
-            BigDecimal balance =  gson.fromJson(req.body(), BigDecimal.class);
+            AccountRequest accountRequest =  accountFromRequest(req);
 
             res.type("application/json");
             res.status(201);
 
-            return accountHandler.createAccount(balance);
+            return accountHandler.createAccount(accountRequest.balance);
         };
     }
 
@@ -54,4 +57,12 @@ public class AccountsRoute {
             return accountHandler.getTransfersByAccountId(id);
         };
     }
+
+    private AccountRequest accountFromRequest(Request req) {
+        Optional<String> json = Optional.of(req.body());
+
+        return json.map(this::fromJson).orElse(new AccountRequest(BigDecimal.ZERO));
+    }
+
+    private AccountRequest fromJson(String json) { return gson.fromJson(json, AccountRequest.class); }
 }

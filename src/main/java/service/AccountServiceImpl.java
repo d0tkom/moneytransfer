@@ -3,7 +3,7 @@ package service;
 import db.DataStore;
 import exception.AccountNotFoundException;
 import model.Account;
-import model.AccountWithBalance;
+import model.AccountResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountWithBalance getAccount(String id) {
+    public AccountResponse getAccount(String id) {
         if (db.accounts.containsKey(id)) {
             LocalDateTime created = db.accounts.get(id).created;
 
@@ -43,15 +43,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Collection<AccountWithBalance> getAccounts() {
+    public Collection<AccountResponse> getAccounts() {
         return db.accounts.values().stream().map((a) -> getAccountWithBalance(a.id, a.created)).collect(Collectors.toList());
     }
 
-    private AccountWithBalance getAccountWithBalance(String id, LocalDateTime created) {
+    private AccountResponse getAccountWithBalance(String id, LocalDateTime created) {
         BigDecimal balance = db.transfers.values().stream()
                 .map(t -> Objects.equals(t.source, id) ? t.amount.negate() : Objects.equals(t.target, id) ? t.amount : BigDecimal.ZERO)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return new AccountWithBalance(id, created, balance);
+        return new AccountResponse(id, created, balance);
     }
 }

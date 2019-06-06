@@ -1,12 +1,12 @@
 package service;
 
 import model.Account;
-import model.AccountWithBalance;
+import model.AccountResponse;
 
 import java.util.Collection;
 
 public interface AccountService {
-    AccountWithBalance getAccount(String id);
+    AccountResponse getAccount(String id);
     Account createAccount();
-    Collection<AccountWithBalance> getAccounts();
+    Collection<AccountResponse> getAccounts();
 }

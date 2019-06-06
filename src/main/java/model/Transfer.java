@@ -38,7 +38,7 @@ public class Transfer {
 
     @Override
     public String toString() {
-        return "Account{" +
+        return "Transfer{" +
                 "id=" + id +
                 ", source=" + source +
                 ", target=" + target +
