@@ -31,7 +31,7 @@ public class RestApi {
 
         exceptionHandler = new ExceptionHandler();
 
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     }
 
     public void listen() {
@@ -44,6 +44,8 @@ public class RestApi {
     public void setupAccountsEndpoint() {
         get("/accounts", accountsRoute.getAccounts(), gson::toJson);
         get("/accounts/:id", accountsRoute.getAccountById(), gson::toJson);
+
+        post("/accounts", accountsRoute.postAccounts(), gson::toJson);
     }
 
     public void setupTransfersEndpoint() {
