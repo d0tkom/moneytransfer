@@ -7,7 +7,9 @@ import model.Transfer;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class TransferServiceImpl implements TransferService {
     private final DataStore db;
@@ -15,6 +17,7 @@ public class TransferServiceImpl implements TransferService {
     public TransferServiceImpl(DataStore db) {
         this.db = db;
     }
+
     @Override
     public Transfer getTransfer(String id) {
         Transfer transfer = db.transfers.get(id);
@@ -28,6 +31,11 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public Collection<Transfer> getTransfers() {
         return db.transfers.values();
+    }
+
+    @Override
+    public Collection<Transfer> getTransfersByAccountId(String accountId) {
+        return db.transfers.values().stream().filter(t -> Objects.equals(t.source, accountId) || Objects.equals(t.target, accountId)).collect(Collectors.toList());
     }
 
     @Override

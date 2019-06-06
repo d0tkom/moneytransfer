@@ -35,4 +35,12 @@ public class AccountsRoute {
             return accountHandler.getAccount(id);
         };
     }
+
+    public Route getTransfersByAccountId() {
+        return (req, res) -> {
+            String id = req.params(":id");
+
+            return accountHandler.getTransfersByAccountId(id);
+        };
+    }
 }

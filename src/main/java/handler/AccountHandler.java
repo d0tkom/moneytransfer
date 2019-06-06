@@ -2,6 +2,7 @@ package handler;
 
 import model.Account;
 import model.AccountWithBalance;
+import model.Transfer;
 import service.AccountService;
 import service.TransferService;
 
@@ -36,4 +37,9 @@ public class AccountHandler {
     public Collection<AccountWithBalance> getAccounts() {
         return accountService.getAccounts();
     }
+
+    public Collection<Transfer> getTransfersByAccountId(String accountId) {
+        return transferService.getTransfersByAccountId(accountId);
+    }
+
 }

@@ -63,4 +63,38 @@ public class TransferServiceTest {
         assertTrue(transfers.stream().anyMatch(a -> a.equals(t3)));
     }
 
+    @Test
+    public void getTransfersByAccountId() {
+        Transfer t1 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
+        Transfer t2 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
+        Transfer t3 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
+
+        Transfer t4 = subject.transfer("acc1", "acc3", new BigDecimal(1000));
+
+        Transfer t5 = subject.transfer("dummy", "dummy2", new BigDecimal(1000));
+        Transfer t6 = subject.transfer("dummy", "dummy2", new BigDecimal(1000));
+
+        Collection<Transfer> acc1Transfers = subject.getTransfersByAccountId("acc1");
+        Collection<Transfer> acc2Transfers = subject.getTransfersByAccountId("acc2");
+        Collection<Transfer> acc3Transfers = subject.getTransfersByAccountId("acc3");
+
+        assertEquals(4, acc1Transfers.size());
+        assertEquals(3, acc2Transfers.size());
+        assertEquals(1, acc3Transfers.size());
+        assertTrue(acc1Transfers.stream().anyMatch(a -> a.equals(t1)));
+        assertTrue(acc1Transfers.stream().anyMatch(a -> a.equals(t2)));
+        assertTrue(acc1Transfers.stream().anyMatch(a -> a.equals(t3)));
+        assertTrue(acc1Transfers.stream().anyMatch(a -> a.equals(t4)));
+        assertTrue(acc2Transfers.stream().anyMatch(a -> a.equals(t1)));
+        assertTrue(acc2Transfers.stream().anyMatch(a -> a.equals(t2)));
+        assertTrue(acc2Transfers.stream().anyMatch(a -> a.equals(t3)));
+        assertTrue(acc3Transfers.stream().anyMatch(a -> a.equals(t4)));
+        assertTrue(acc1Transfers.stream().noneMatch(a -> a.equals(t5)));
+        assertTrue(acc1Transfers.stream().noneMatch(a -> a.equals(t6)));
+        assertTrue(acc2Transfers.stream().noneMatch(a -> a.equals(t5)));
+        assertTrue(acc2Transfers.stream().noneMatch(a -> a.equals(t6)));
+        assertTrue(acc3Transfers.stream().noneMatch(a -> a.equals(t5)));
+        assertTrue(acc3Transfers.stream().noneMatch(a -> a.equals(t6)));
+    }
+
 }

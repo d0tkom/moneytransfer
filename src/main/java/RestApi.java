@@ -44,6 +44,7 @@ public class RestApi {
     public void setupAccountsEndpoint() {
         get("/accounts", accountsRoute.getAccounts(), gson::toJson);
         get("/accounts/:id", accountsRoute.getAccountById(), gson::toJson);
+        get("/accounts/:id/transfers", accountsRoute.getTransfersByAccountId(), gson::toJson);
 
         post("/accounts", accountsRoute.postAccounts(), gson::toJson);
     }
