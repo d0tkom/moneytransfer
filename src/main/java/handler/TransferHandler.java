@@ -35,7 +35,7 @@ public class TransferHandler {
     public Transfer transfer(String sourceId, String targetId, BigDecimal amount) throws Exception {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidAmountException("Amount: " + amount + " is not valid");
-        } else if (sourceId == targetId) {
+        } else if (sourceId.equals(targetId)) {
             throw new InvalidTransferException("Money cannot be sent to same account");
         }
 

@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import util.RestClient;
@@ -27,6 +28,9 @@ public class RestApiGetTransferByIdTest {
     private static RestClient restClient;
     private static DataStore db;
 
+    private AccountResponse acc1;
+    private AccountResponse acc2;
+
     @BeforeClass
     public static void startServer() {
         restClient = new RestClient();
@@ -37,6 +41,12 @@ public class RestApiGetTransferByIdTest {
         api.listen();
     }
 
+    @Before
+    public void setUp() throws IOException {
+        acc1 = restClient.postAccount();
+        acc2 = restClient.postAccount(new BigDecimal(100));
+    }
+
     @After
     public void clearDb() {
         db.transfers.clear();
@@ -45,9 +55,6 @@ public class RestApiGetTransferByIdTest {
 
     @Test
     public void getTransferByIdReturns200() throws IOException {
-        AccountResponse acc1 = restClient.postAccount();
-        AccountResponse acc2 = restClient.postAccount(new BigDecimal(100));
-
         Transfer transfer = restClient.postTransfer(acc2.id, acc1.id, new BigDecimal(100));
 
         HttpUriRequest request = new HttpGet(url + transfer.id);
@@ -59,9 +66,6 @@ public class RestApiGetTransferByIdTest {
 
     @Test
     public void getTransferByIdReturnsJson() throws IOException {
-        AccountResponse acc1 = restClient.postAccount();
-        AccountResponse acc2 = restClient.postAccount(new BigDecimal(100));
-
         Transfer transfer = restClient.postTransfer(acc2.id, acc1.id, new BigDecimal(100));
 
         HttpUriRequest request = new HttpGet(url + transfer.id);
@@ -73,9 +77,6 @@ public class RestApiGetTransferByIdTest {
 
     @Test
     public void getTransferByIdGetsBackSameTransfer() throws IOException {
-        AccountResponse acc1 = restClient.postAccount();
-        AccountResponse acc2 = restClient.postAccount(new BigDecimal(100));
-
         Transfer createdTransfer = restClient.postTransfer(acc2.id, acc1.id, new BigDecimal(100));
 
         Transfer returnedTransfer = restClient.getTransferById(createdTransfer.id);
