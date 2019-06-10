@@ -1,6 +1,8 @@
 package handler;
 
+import exception.AccountNotFoundException;
 import exception.InsufficientFundsException;
+import exception.InvalidAmountException;
 import model.AccountResponse;
 import model.Transfer;
 import service.AccountService;
@@ -29,24 +31,34 @@ public class TransferHandler {
         return transferService.getTransfers();
     }
 
-    public Transfer transfer(String sourceId, String targetId, BigDecimal amount) {
+    public Transfer transfer(String sourceId, String targetId, BigDecimal amount) throws Exception {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            return null;
+            throw new InvalidAmountException("Amount: " + amount + " is not valid");
         }
 
         Transfer transfer = null;
+        Exception accountNotFoundException = null;
 
         lock.lock();
         try {
             AccountResponse source = accountService.getAccount(sourceId);
-            if (source != null && source.balance.compareTo(amount) > -1) {
+            accountService.getAccount(targetId); // this will throw if target doesn't exist
+
+            if (source.balance.compareTo(amount) > -1) {
                 transfer = transferService.transfer(sourceId, targetId, amount);
             }
+        } catch(AccountNotFoundException e) {
+            accountNotFoundException = e;
         } finally {
             lock.unlock();
+
+            if (accountNotFoundException != null)
+                throw accountNotFoundException;
+
             if (transfer == null) {
                 throw new InsufficientFundsException("Insufficient funds");
             }
+
             return transfer;
         }
 

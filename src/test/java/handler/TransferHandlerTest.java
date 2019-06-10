@@ -1,7 +1,9 @@
 package handler;
 
 import db.DataStore;
+import exception.AccountNotFoundException;
 import exception.InsufficientFundsException;
+import exception.InvalidAmountException;
 import model.Account;
 import model.AccountResponse;
 import model.Transfer;
@@ -40,7 +42,7 @@ public class TransferHandlerTest {
     }
 
     @Test
-    public void transferNoError() {
+    public void transferNoError() throws Exception {
         Transfer t = subject.transfer("acc1", "acc2", new BigDecimal(100));
 
         Transfer stored = subject.getTransfer(t.id);
@@ -53,44 +55,33 @@ public class TransferHandlerTest {
         assertEquals(acc2Balance.add(new BigDecimal(100)), acc2.balance);
     }
 
-    @Test
-    public void transferNegative() {
-        Transfer t = subject.transfer("acc1", "acc2", new BigDecimal(-100));
+    @Test (expected = InvalidAmountException.class)
+    public void transferNegative() throws Exception {
+        subject.transfer("acc1", "acc2", new BigDecimal(-100));
+    }
 
-        AccountResponse acc1 = accountService.getAccount("acc1");
-        AccountResponse acc2 = accountService.getAccount("acc2");
+    @Test (expected = InvalidAmountException.class)
+    public void transferZero() throws Exception {
+        subject.transfer("acc1", "acc2", BigDecimal.ZERO);
+    }
 
-        assertEquals(t, null);
-        assertEquals(acc1Balance, acc1.balance);
-        assertEquals(acc2Balance, acc2.balance);
+    @Test (expected = InvalidAmountException.class)
+    public void transferNull() throws Exception {
+        subject.transfer("acc1", "acc2", null);
+    }
+
+    @Test (expected = AccountNotFoundException.class)
+    public void sourceAccountDoesntExist() throws Exception {
+        subject.transfer("doesntExist", "acc2", new BigDecimal(100));
+    }
+
+    @Test (expected = AccountNotFoundException.class)
+    public void targetAccountDoesntExist() throws Exception {
+        subject.transfer("acc1", "doesntExist", new BigDecimal(100));
     }
 
     @Test
-    public void transferZero() {
-        Transfer t = subject.transfer("acc1", "acc2", BigDecimal.ZERO);
-
-        AccountResponse acc1 = accountService.getAccount("acc1");
-        AccountResponse acc2 = accountService.getAccount("acc2");
-
-        assertEquals(t, null);
-        assertEquals(acc1Balance, acc1.balance);
-        assertEquals(acc2Balance, acc2.balance);
-    }
-
-    @Test
-    public void transferNull() {
-        Transfer t = subject.transfer("acc1", "acc2", null);
-
-        AccountResponse acc1 = accountService.getAccount("acc1");
-        AccountResponse acc2 = accountService.getAccount("acc2");
-
-        assertEquals(t, null);
-        assertEquals(acc1Balance, acc1.balance);
-        assertEquals(acc2Balance, acc2.balance);
-    }
-
-    @Test
-    public void transferBackAndForth() {
+    public void transferBackAndForth() throws Exception {
         Transfer t1 = subject.transfer("acc1", "acc2", new BigDecimal(100));
         Transfer t2 = subject.transfer("acc2", "acc1", new BigDecimal(100));
 
@@ -110,7 +101,7 @@ public class TransferHandlerTest {
     }
 
     @Test(expected = InsufficientFundsException.class)
-    public void transferInsufficientFunds() {
+    public void transferInsufficientFunds() throws Exception {
         subject.transfer("acc1", "acc2", new BigDecimal(10000));
     }
 }
