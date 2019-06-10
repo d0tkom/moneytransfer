@@ -4,6 +4,7 @@ import db.DataStore;
 import exception.AccountNotFoundException;
 import exception.InsufficientFundsException;
 import exception.InvalidAmountException;
+import exception.InvalidTransferException;
 import model.Account;
 import model.AccountResponse;
 import model.Transfer;
@@ -78,6 +79,11 @@ public class TransferHandlerTest {
     @Test (expected = AccountNotFoundException.class)
     public void targetAccountDoesntExist() throws Exception {
         subject.transfer("acc1", "doesntExist", new BigDecimal(100));
+    }
+
+    @Test (expected = InvalidTransferException.class)
+    public void sendMoneyToSameAccount() throws Exception {
+        subject.transfer("acc1", "acc1", new BigDecimal(100));
     }
 
     @Test

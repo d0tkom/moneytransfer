@@ -3,6 +3,7 @@ package handler;
 import exception.AccountNotFoundException;
 import exception.InsufficientFundsException;
 import exception.InvalidAmountException;
+import exception.InvalidTransferException;
 import model.AccountResponse;
 import model.Transfer;
 import service.AccountService;
@@ -34,6 +35,8 @@ public class TransferHandler {
     public Transfer transfer(String sourceId, String targetId, BigDecimal amount) throws Exception {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidAmountException("Amount: " + amount + " is not valid");
+        } else if (sourceId == targetId) {
+            throw new InvalidTransferException("Money cannot be sent to same account");
         }
 
         Transfer transfer = null;
