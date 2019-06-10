@@ -2,9 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import exception.AccountNotFoundException;
-import exception.InsufficientFundsException;
-import exception.TransferNotFoundException;
+import exception.*;
 import model.ErrorResponse;
 import org.eclipse.jetty.http.HttpStatus;
 
@@ -13,7 +11,8 @@ public class ErrorHandler {
 
     public spark.ExceptionHandler handleException() {
         return (e, req, res) -> {
-            if (e instanceof InsufficientFundsException || e instanceof IllegalArgumentException) {
+            if (e instanceof InsufficientFundsException || e instanceof IllegalArgumentException ||
+                    e instanceof InvalidAmountException || e instanceof InvalidTransferException) {
                 res.status(HttpStatus.BAD_REQUEST_400);
             } else if (e instanceof AccountNotFoundException || e instanceof TransferNotFoundException) {
                 res.status(HttpStatus.NOT_FOUND_404);
