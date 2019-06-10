@@ -59,25 +59,4 @@ public class RestApiGetAccountsTest {
 
         assertEquals(jsonMimeType, ContentType.getOrDefault(response.getEntity()).getMimeType());
     }
-
-    @Test
-    public void getAccountsReturnsEmptyArray() throws IOException {
-        Collection<AccountResponse> accounts = restClient.getAccounts();
-
-        assertEquals(0, accounts.size());
-    }
-
-    @Test
-    public void getAccountsReturnsAllAccounts() throws IOException {
-        AccountResponse acc1 = restClient.postAccount();
-        AccountResponse acc2 = restClient.postAccount();
-        AccountResponse acc3 = restClient.postAccount();
-
-        Collection<AccountResponse> accounts = restClient.getAccounts();
-
-        assertEquals(3, accounts.size());
-        assertTrue(accounts.stream().anyMatch(a -> a.equals(acc1)));
-        assertTrue(accounts.stream().anyMatch(a -> a.equals(acc2)));
-        assertTrue(accounts.stream().anyMatch(a -> a.equals(acc3)));
-    }
 }

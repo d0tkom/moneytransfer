@@ -35,7 +35,7 @@ public class RestClient {
         return gson.fromJson(responseString, AccountResponse.class);
     }
 
-    public AccountResponse postAccountWithBalance(BigDecimal balance) throws IOException {
+    public AccountResponse postAccount(BigDecimal balance) throws IOException {
         HttpPost request = new HttpPost("http://localhost:4567/accounts");
 
         StringEntity requestEntity = new StringEntity(

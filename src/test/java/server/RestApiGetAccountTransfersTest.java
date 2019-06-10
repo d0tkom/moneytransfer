@@ -69,7 +69,7 @@ public class RestApiGetAccountTransfersTest {
 
     @Test
     public void getAccountTransfersReturnsTransfersForGivenAccount() throws IOException {
-        AccountResponse acc1 = restClient.postAccountWithBalance(new BigDecimal(1000));
+        AccountResponse acc1 = restClient.postAccount(new BigDecimal(1000));
         AccountResponse acc2 = restClient.postAccount();
 
         Transfer t1 = restClient.postTransfer(acc1.id, acc2.id, new BigDecimal(100));

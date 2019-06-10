@@ -90,7 +90,7 @@ public class RestApiPostAccountTest {
     public void postAccountWithBalanceReturnsAccountJson() throws IOException {
         BigDecimal balance = new BigDecimal(100);
 
-        AccountResponse account = restClient.postAccountWithBalance(balance);
+        AccountResponse account = restClient.postAccount(balance);
 
         assertNotNull(account);
         assertNotNull(account.id);

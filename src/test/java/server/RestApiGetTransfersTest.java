@@ -61,28 +61,4 @@ public class RestApiGetTransfersTest {
 
         assertEquals(jsonMimeType, ContentType.getOrDefault(response.getEntity()).getMimeType());
     }
-
-    @Test
-    public void getTransfersReturnsEmptyArray() throws IOException {
-        Collection<Transfer> transfers = restClient.getTransfers();
-
-        assertEquals(0, transfers.size());
-    }
-
-    @Test
-    public void getTransfersReturnsAllTransfers() throws IOException {
-        AccountResponse acc1 = restClient.postAccountWithBalance(new BigDecimal(1000));
-        AccountResponse acc2 = restClient.postAccount();
-
-        Transfer t1 = restClient.postTransfer(acc1.id, acc2.id, new BigDecimal(100));
-        Transfer t2 = restClient.postTransfer(acc1.id, acc2.id, new BigDecimal(100));
-        Transfer t3 = restClient.postTransfer(acc1.id, acc2.id, new BigDecimal(100));
-
-        Collection<Transfer> transfers = restClient.getTransfers();
-
-        assertEquals(4, transfers.size()); // starting balance counts as one transfer
-        assertTrue(transfers.stream().anyMatch(t -> t.equals(t1)));
-        assertTrue(transfers.stream().anyMatch(t -> t.equals(t2)));
-        assertTrue(transfers.stream().anyMatch(t -> t.equals(t3)));
-    }
 }
