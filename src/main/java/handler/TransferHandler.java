@@ -8,6 +8,7 @@ import model.AccountResponse;
 import model.Transfer;
 import service.AccountService;
 import service.TransferService;
+import validator.Validator;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -16,6 +17,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class TransferHandler {
     private AccountService accountService;
     private TransferService transferService;
+
+    private Validator validator = new Validator();
 
     private ReentrantLock lock = new ReentrantLock();
 
@@ -33,11 +36,8 @@ public class TransferHandler {
     }
 
     public Transfer transfer(String sourceId, String targetId, BigDecimal amount) throws Exception {
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidAmountException("Amount: " + amount + " is not valid");
-        } else if (sourceId.equals(targetId)) {
-            throw new InvalidTransferException("Money cannot be sent to same account");
-        }
+        validator.validateAmount(amount);
+        validator.validateAccountsDiffer(sourceId, targetId);
 
         Transfer transfer = null;
         Exception accountNotFoundException = null;

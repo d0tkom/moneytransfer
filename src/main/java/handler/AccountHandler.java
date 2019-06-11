@@ -5,6 +5,7 @@ import model.AccountResponse;
 import model.Transfer;
 import service.AccountService;
 import service.TransferService;
+import validator.Validator;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -12,6 +13,8 @@ import java.util.Collection;
 public class AccountHandler {
     private final AccountService accountService;
     private final TransferService transferService;
+
+    private Validator validator = new Validator();
 
     public AccountHandler(AccountService accountService, TransferService transferService) {
         this.accountService = accountService;
@@ -23,12 +26,14 @@ public class AccountHandler {
     }
 
     public AccountResponse createAccount(BigDecimal balance) {
+        validator.validateStartingBalance(balance);
+
         Account account = accountService.createAccount();
 
-        if (balance != null && balance.compareTo(BigDecimal.ZERO) > 0) {
-            transferService.transfer(null, account.id, balance);
-        } else {
+        if (balance == null) {
             balance = BigDecimal.ZERO;
+        } else {
+            transferService.transfer(null, account.id, balance);
         }
 
         return new AccountResponse(account.id, account.created, balance);

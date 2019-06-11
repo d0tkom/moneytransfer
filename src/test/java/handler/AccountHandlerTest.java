@@ -2,6 +2,7 @@ package handler;
 
 import db.DataStore;
 import exception.AccountNotFoundException;
+import exception.InvalidAmountException;
 import model.Account;
 import model.AccountResponse;
 import org.junit.Before;
@@ -60,14 +61,9 @@ public class AccountHandlerTest {
         assertEquals(stored.balance, BigDecimal.ZERO);
     }
 
-    @Test
+    @Test (expected = InvalidAmountException.class)
     public void testCreateAccountNegativeBalance() {
         Account acc = subject.createAccount(new BigDecimal(-100));
-
-        AccountResponse stored = subject.getAccount(acc.id);
-
-        assertEquals(stored, acc);
-        assertEquals(stored.balance, BigDecimal.ZERO);
     }
 
     @Test(expected = AccountNotFoundException.class)
@@ -81,16 +77,14 @@ public class AccountHandlerTest {
     public void createMultipleAccountsNoError() {
         Account acc1 = subject.createAccount(BigDecimal.ZERO);
         Account acc2 = subject.createAccount(new BigDecimal(100));
-        Account acc3 = subject.createAccount(new BigDecimal(-100));
-        Account acc4 = subject.createAccount(null);
+        Account acc3 = subject.createAccount(null);
 
         Collection<AccountResponse> accounts = subject.getAccounts();
 
-        assertEquals(4, accounts.size());
+        assertEquals(3, accounts.size());
         assertTrue(accounts.stream().anyMatch(a -> a.equals(acc1)));
         assertTrue(accounts.stream().anyMatch(a -> a.equals(acc2)));
         assertTrue(accounts.stream().anyMatch(a -> a.equals(acc3)));
-        assertTrue(accounts.stream().anyMatch(a -> a.equals(acc4)));
     }
 }
 
