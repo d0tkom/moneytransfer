@@ -23,7 +23,7 @@ a transfer after checking required balance
 ## Endpoints
 All endpoints return json. If there was an error, (wrong user input, non existing account etc.), endpoints return
 an error json object in this format:
-`{error: "error message" }`
+`{error: "error message"}`
 #### `GET http://localhost:4567/accounts`
 Returns the list of all accounts.
 
@@ -37,7 +37,7 @@ Returns all transfers concerning account with the given id.
 
 Without sending any body, a new account will be returned with 0 balance. By providing a body in this format:
 
-`{balance: :startingBalance }` 
+`{balance: :startingBalance}` 
 
 an account can be created with a starting balance.
 
