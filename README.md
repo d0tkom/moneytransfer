@@ -16,7 +16,7 @@ can always look up in O(1) time.
 - Services and handlers have their own corresponding tests
 - There are also some integration tests, to test the actual rest endpoints
 - To make sure concurrent transfers are handled correctly, a lock was used, so only ever one thread can insert
-a transfer after checking required balance\
+a transfer after checking required balance
 - For account and transfer ids UUIDs were used, and it was assumed those never collide
 
 
@@ -35,8 +35,11 @@ Returns all transfers concerning account with the given id.
 
 #### `POST http://localhost:4567/accounts`
 
-Without sending any body, a new account will be returned with 0 balance. By providing a body in this format: 
-`{balance: :startingBalance }` an account can be created with a starting balance.
+Without sending any body, a new account will be returned with 0 balance. By providing a body in this format:
+
+`{balance: :startingBalance }` 
+
+an account can be created with a starting balance.
 
 
 
