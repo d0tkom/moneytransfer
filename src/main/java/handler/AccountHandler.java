@@ -30,9 +30,12 @@ public class AccountHandler {
 
         Account account = accountService.createAccount();
 
+        // if balance is null (wasn't provided) we just open an account with zero balance
         if (balance == null) {
             balance = BigDecimal.ZERO;
         } else {
+            // if balance was provided, we add initial balance represented as a transfer coming from null
+            // (from outside of our system)
             transferService.transfer(null, account.id, balance);
         }
 

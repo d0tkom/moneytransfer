@@ -9,6 +9,7 @@ import org.eclipse.jetty.http.HttpStatus;
 public class ErrorHandler {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
+    // This handler returns the correct HTTP error codes for given exceptions thrown
     public spark.ExceptionHandler handleException() {
         return (e, req, res) -> {
             if (e instanceof InsufficientFundsException || e instanceof IllegalArgumentException ||

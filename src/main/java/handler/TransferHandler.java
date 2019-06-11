@@ -2,8 +2,6 @@ package handler;
 
 import exception.AccountNotFoundException;
 import exception.InsufficientFundsException;
-import exception.InvalidAmountException;
-import exception.InvalidTransferException;
 import model.AccountResponse;
 import model.Transfer;
 import service.AccountService;
@@ -39,31 +37,35 @@ public class TransferHandler {
         validator.validateAmount(amount);
         validator.validateAccountsDiffer(sourceId, targetId);
 
-        Transfer transfer = null;
         Exception accountNotFoundException = null;
+        Exception insufficientFundsException = null;
 
+        // We create a lock before validating the required balance, and calling transfer().
+        // This way we can make sure that the balance won't change while we are validating it.
+        // This can also become a bottleneck for our transactions, as only one thread can handle
+        // a transfer at any time.
         lock.lock();
         try {
             AccountResponse source = accountService.getAccount(sourceId);
             accountService.getAccount(targetId); // this will throw if target doesn't exist
 
-            if (source.balance.compareTo(amount) > -1) {
-                transfer = transferService.transfer(sourceId, targetId, amount);
-            }
+            validator.validateSufficientBalance(source.balance, amount);
+
+            return transferService.transfer(sourceId, targetId, amount);
         } catch(AccountNotFoundException e) {
             accountNotFoundException = e;
+        } catch(InsufficientFundsException e) {
+            insufficientFundsException = e;
         } finally {
             lock.unlock();
 
             if (accountNotFoundException != null)
                 throw accountNotFoundException;
 
-            if (transfer == null) {
-                throw new InsufficientFundsException("Insufficient funds");
-            }
-
-            return transfer;
+            if (insufficientFundsException != null)
+                throw insufficientFundsException;
         }
 
+        return null;
     }
 }

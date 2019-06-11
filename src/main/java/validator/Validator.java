@@ -1,5 +1,6 @@
 package validator;
 
+import exception.InsufficientFundsException;
 import exception.InvalidAmountException;
 import exception.InvalidTransferException;
 
@@ -10,6 +11,11 @@ public class Validator {
     public void validateAmount(BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
             throw new InvalidAmountException("Amount: " + amount + " is not valid");
+    }
+
+    public void validateSufficientBalance(BigDecimal balance, BigDecimal amount) {
+        if (balance.compareTo(amount) < 0)
+            throw new InsufficientFundsException("Insufficient funds");;
     }
 
 
