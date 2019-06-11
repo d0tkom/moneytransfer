@@ -19,6 +19,8 @@ public class TransferServiceTest {
     private TransferService subject;
     private DataStore db;
 
+    private final BigDecimal amount = new BigDecimal(1000);
+
     @Before
     public void setUp() {
         db = new DataStore();
@@ -28,7 +30,7 @@ public class TransferServiceTest {
 
     @Test
     public void createAndGetExistingTransferNoError() {
-        Transfer t = subject.transfer("acc1", "acc2", new BigDecimal(1000));
+        Transfer t = subject.transfer("acc1", "acc2", amount);
 
         Transfer stored = subject.getTransfer(t.id);
 
@@ -44,9 +46,9 @@ public class TransferServiceTest {
 
     @Test
     public void createMultipleTransfersNoError() {
-        Transfer t1 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
-        Transfer t2 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
-        Transfer t3 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
+        Transfer t1 = subject.transfer("acc1", "acc2", amount);
+        Transfer t2 = subject.transfer("acc1", "acc2", amount);
+        Transfer t3 = subject.transfer("acc1", "acc2", amount);
 
         Collection<Transfer> transfers = subject.getTransfers();
 
@@ -62,14 +64,14 @@ public class TransferServiceTest {
         db.accounts.put("acc2", new Account("acc1", LocalDateTime.now()));
         db.accounts.put("acc3", new Account("acc1", LocalDateTime.now()));
 
-        Transfer t1 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
-        Transfer t2 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
-        Transfer t3 = subject.transfer("acc1", "acc2", new BigDecimal(1000));
+        Transfer t1 = subject.transfer("acc1", "acc2", amount);
+        Transfer t2 = subject.transfer("acc1", "acc2", amount);
+        Transfer t3 = subject.transfer("acc1", "acc2", amount);
 
-        Transfer t4 = subject.transfer("acc1", "acc3", new BigDecimal(1000));
+        Transfer t4 = subject.transfer("acc1", "acc3", amount);
 
-        Transfer t5 = subject.transfer("dummy", "dummy2", new BigDecimal(1000));
-        Transfer t6 = subject.transfer("dummy", "dummy2", new BigDecimal(1000));
+        Transfer t5 = subject.transfer("dummy", "dummy2", amount);
+        Transfer t6 = subject.transfer("dummy", "dummy2", amount);
 
         Collection<Transfer> acc1Transfers = subject.getTransfersByAccountId("acc1");
         Collection<Transfer> acc2Transfers = subject.getTransfersByAccountId("acc2");
