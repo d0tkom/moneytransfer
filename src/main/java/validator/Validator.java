@@ -18,7 +18,6 @@ public class Validator {
             throw new InsufficientFundsException("Insufficient funds");;
     }
 
-
     public void validateStartingBalance(BigDecimal balance) {
         if (balance != null && balance.compareTo(BigDecimal.ZERO) < 0)
             throw new InvalidAmountException("Starting balance: " + balance + " is not valid");

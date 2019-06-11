@@ -36,6 +36,13 @@ public class RestApi {
         gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     }
 
+    public static void main(String[] args) {
+        DataStore db = new DataStore();
+        RestApi api = new RestApi(db);
+
+        api.listen();
+    }
+
     public void listen() {
         setupAccountsEndpoint();
         setupTransfersEndpoint();

@@ -18,8 +18,12 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+// This class behaves a bit like integration test, as we don't mock the services
+
 public class AccountHandlerTest {
     private AccountHandler subject;
+
+    private final BigDecimal balance = new BigDecimal(100);
 
     @Before
     public void setUp() {
@@ -43,12 +47,12 @@ public class AccountHandlerTest {
 
     @Test
     public void testCreateAccountWithBalance() {
-        Account acc = subject.createAccount(new BigDecimal(100));
+        Account acc = subject.createAccount(balance);
 
         AccountResponse stored = subject.getAccount(acc.id);
 
         assertEquals(stored, acc);
-        assertEquals(stored.balance, new BigDecimal(100));
+        assertEquals(stored.balance, balance);
     }
 
     @Test
@@ -63,7 +67,7 @@ public class AccountHandlerTest {
 
     @Test (expected = InvalidAmountException.class)
     public void testCreateAccountNegativeBalance() {
-        Account acc = subject.createAccount(new BigDecimal(-100));
+        subject.createAccount(new BigDecimal(-100));
     }
 
     @Test(expected = AccountNotFoundException.class)
@@ -76,7 +80,7 @@ public class AccountHandlerTest {
     @Test
     public void createMultipleAccountsNoError() {
         Account acc1 = subject.createAccount(BigDecimal.ZERO);
-        Account acc2 = subject.createAccount(new BigDecimal(100));
+        Account acc2 = subject.createAccount(balance);
         Account acc3 = subject.createAccount(null);
 
         Collection<AccountResponse> accounts = subject.getAccounts();

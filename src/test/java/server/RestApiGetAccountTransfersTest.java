@@ -9,7 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import util.RestClient;
@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -39,7 +38,7 @@ public class RestApiGetAccountTransfersTest {
         api.listen();
     }
 
-    @After
+    @Before
     public void clearDb() {
         db.transfers.clear();
         db.accounts.clear();

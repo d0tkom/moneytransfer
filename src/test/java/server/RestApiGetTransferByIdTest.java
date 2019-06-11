@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,14 +42,11 @@ public class RestApiGetTransferByIdTest {
 
     @Before
     public void setUp() throws IOException {
-        acc1 = restClient.postAccount();
-        acc2 = restClient.postAccount(new BigDecimal(100));
-    }
-
-    @After
-    public void clearDb() {
         db.transfers.clear();
         db.accounts.clear();
+
+        acc1 = restClient.postAccount();
+        acc2 = restClient.postAccount(new BigDecimal(100));
     }
 
     @Test

@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+// Helper class to use inside rest api tests
 public class RestClient {
     private final Gson gson;
     private final String baseUrl = "http://localhost:4567/";

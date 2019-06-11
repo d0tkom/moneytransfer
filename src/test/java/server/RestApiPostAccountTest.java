@@ -8,7 +8,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import util.RestClient;
@@ -36,7 +36,7 @@ public class RestApiPostAccountTest {
         api.listen();
     }
 
-    @After
+    @Before
     public void clearDb() {
         db.transfers.clear();
         db.accounts.clear();
