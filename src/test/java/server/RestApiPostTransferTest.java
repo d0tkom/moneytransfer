@@ -65,12 +65,16 @@ public class RestApiPostTransferTest {
 
     @Test
     public void postTransferReturnsTransferJson() throws IOException {
-        Transfer transfer = restClient.postTransfer(acc2.id, acc1.id, new BigDecimal(100));
+        HttpPost request = new HttpPost(url);
 
-        assertNotNull(transfer);
-        assertEquals(acc2.id, transfer.source);
-        assertEquals(acc1.id, transfer.target);
-        assertEquals(new BigDecimal(100), transfer.amount);
+        StringEntity requestEntity = new StringEntity(
+                "{\"source\": " + acc2.id + ", \"target\": " + acc1.id + ", \"amount\": " + 100 + "}",
+                ContentType.APPLICATION_JSON);
+        request.setEntity(requestEntity);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(jsonMimeType, ContentType.getOrDefault(response.getEntity()).getMimeType());
     }
 
     @Test

@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 public class RestApiPostAccountTest {
     private final String jsonMimeType = "application/json";
-    private final String url = "http://localhost:4567/accounts/";
+    private final String url = "http://localhost:4567/accounts";
 
     private static RestClient restClient;
     private static DataStore db;
@@ -44,7 +44,7 @@ public class RestApiPostAccountTest {
 
     @Test
     public void postAccountWithEmtpyBodyReturns201() throws IOException {
-        HttpPost request = new HttpPost("http://localhost:4567/accounts");
+        HttpPost request = new HttpPost(url);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
@@ -52,11 +52,20 @@ public class RestApiPostAccountTest {
     }
 
     @Test
+    public void postAccountReturnsJson() throws IOException {
+        HttpPost request = new HttpPost(url);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(jsonMimeType, ContentType.getOrDefault(response.getEntity()).getMimeType());
+    }
+
+    @Test
     public void postAccountWithStartingBalanceReturns201() throws IOException {
         StringEntity requestEntity = new StringEntity(
                 "{\"balance\": 100}",
                 ContentType.APPLICATION_JSON);
-        HttpPost request = new HttpPost("http://localhost:4567/accounts");
+        HttpPost request = new HttpPost(url);
         request.setEntity(requestEntity);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -69,7 +78,7 @@ public class RestApiPostAccountTest {
         StringEntity requestEntity = new StringEntity(
                 "{",
                 ContentType.APPLICATION_JSON);
-        HttpPost request = new HttpPost("http://localhost:4567/accounts");
+        HttpPost request = new HttpPost(url);
         request.setEntity(requestEntity);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);

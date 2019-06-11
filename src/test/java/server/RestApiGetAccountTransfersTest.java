@@ -71,10 +71,11 @@ public class RestApiGetAccountTransfersTest {
         AccountResponse acc1 = restClient.postAccount(new BigDecimal(1000));
         AccountResponse acc2 = restClient.postAccount();
 
-        Transfer t1 = restClient.postTransfer(acc1.id, acc2.id, new BigDecimal(100));
-        Transfer t2 = restClient.postTransfer(acc1.id, acc2.id, new BigDecimal(100));
-        Transfer t3 = restClient.postTransfer(acc1.id, acc2.id, new BigDecimal(100));
-        Transfer t4 = restClient.postTransfer(acc2.id, acc1.id, new BigDecimal(100));
+        BigDecimal amount = new BigDecimal(100);
+        Transfer t1 = restClient.postTransfer(acc1.id, acc2.id, amount);
+        Transfer t2 = restClient.postTransfer(acc1.id, acc2.id, amount);
+        Transfer t3 = restClient.postTransfer(acc1.id, acc2.id, amount);
+        Transfer t4 = restClient.postTransfer(acc2.id, acc1.id, amount);
 
         Collection<Transfer> transfers = restClient.getTransfersByAccountId(acc1.id);
 
