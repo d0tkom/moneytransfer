@@ -2,6 +2,7 @@ package model;
 
 import java.util.Objects;
 
+// Wrapper for our error message
 public class ErrorResponse {
     public final Error error;
 

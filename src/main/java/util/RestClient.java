@@ -21,12 +21,38 @@ import java.util.stream.Collectors;
 
 public class RestClient {
     private final Gson gson;
+    private final String baseUrl = "http://localhost:4567/";
+    private final String accountsUrl = baseUrl + "accounts";
+    private final String transfersUrl = baseUrl + "transfers";
 
     public RestClient() {
         this.gson = new Gson();
     }
+
+    public AccountResponse getAccountById(String id) throws IOException {
+        HttpUriRequest request = new HttpGet(accountsUrl + "/" + id);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        HttpEntity entity = response.getEntity();
+        String responseString = EntityUtils.toString(entity, "UTF-8");
+
+        return gson.fromJson(responseString, AccountResponse.class);
+    }
+
+    public Collection<AccountResponse> getAccounts() throws IOException {
+        HttpUriRequest request = new HttpGet(accountsUrl);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        HttpEntity entity = response.getEntity();
+        String responseString = EntityUtils.toString(entity, "UTF-8");
+
+        AccountResponse[] arr = gson.fromJson(responseString, AccountResponse[].class);
+
+        return Arrays.stream(arr).collect(Collectors.toList());
+    }
+
     public AccountResponse postAccount() throws IOException {
-        HttpPost request = new HttpPost("http://localhost:4567/accounts");
+        HttpPost request = new HttpPost(accountsUrl);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         HttpEntity entity = response.getEntity();
@@ -36,7 +62,7 @@ public class RestClient {
     }
 
     public AccountResponse postAccount(BigDecimal balance) throws IOException {
-        HttpPost request = new HttpPost("http://localhost:4567/accounts");
+        HttpPost request = new HttpPost(accountsUrl);
 
         StringEntity requestEntity = new StringEntity(
                 "{\"balance\": " + balance +"}",
@@ -50,13 +76,8 @@ public class RestClient {
         return gson.fromJson(responseString, AccountResponse.class);
     }
 
-    public Transfer postTransfer(String source, String target, BigDecimal amount) throws IOException {
-        HttpPost request = new HttpPost("http://localhost:4567/transfers");
-
-        StringEntity requestEntity = new StringEntity(
-                "{\"source\": " + source + ", \"target\": " + target + ", \"amount\": " + amount + "}",
-                ContentType.APPLICATION_JSON);
-        request.setEntity(requestEntity);
+    public Transfer getTransferById(String id) throws IOException {
+        HttpUriRequest request = new HttpGet(transfersUrl + "/" + id);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         HttpEntity entity = response.getEntity();
@@ -65,30 +86,20 @@ public class RestClient {
         return gson.fromJson(responseString, Transfer.class);
     }
 
-    public Collection<AccountResponse> getAccounts() throws IOException {
-        HttpUriRequest request = new HttpGet("http://localhost:4567/accounts");
+    public Collection<Transfer> getTransfersByAccountId(String id) throws IOException {
+        HttpUriRequest request = new HttpGet(accountsUrl + "/" + id + "/transfers");
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
 
-        AccountResponse[] arr = gson.fromJson(responseString, AccountResponse[].class);
+        Transfer[] arr = gson.fromJson(responseString, Transfer[].class);
 
         return Arrays.stream(arr).collect(Collectors.toList());
-    }
-
-    public AccountResponse getAccountById(String id) throws IOException {
-        HttpUriRequest request = new HttpGet("http://localhost:4567/accounts/" + id);
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        HttpEntity entity = response.getEntity();
-        String responseString = EntityUtils.toString(entity, "UTF-8");
-
-        return gson.fromJson(responseString, AccountResponse.class);
     }
 
     public Collection<Transfer> getTransfers() throws IOException {
-        HttpUriRequest request = new HttpGet("http://localhost:4567/transfers");
+        HttpUriRequest request = new HttpGet(transfersUrl);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         HttpEntity entity = response.getEntity();
@@ -99,20 +110,13 @@ public class RestClient {
         return Arrays.stream(arr).collect(Collectors.toList());
     }
 
-    public Collection<Transfer> getTransfersByAccountId(String id) throws IOException {
-        HttpUriRequest request = new HttpGet("http://localhost:4567/accounts/" + id + "/transfers");
+    public Transfer postTransfer(String source, String target, BigDecimal amount) throws IOException {
+        HttpPost request = new HttpPost(transfersUrl);
 
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        HttpEntity entity = response.getEntity();
-        String responseString = EntityUtils.toString(entity, "UTF-8");
-
-        Transfer[] arr = gson.fromJson(responseString, Transfer[].class);
-
-        return Arrays.stream(arr).collect(Collectors.toList());
-    }
-
-    public Transfer getTransferById(String id) throws IOException {
-        HttpUriRequest request = new HttpGet("http://localhost:4567/transfers/" + id);
+        StringEntity requestEntity = new StringEntity(
+                "{\"source\": " + source + ", \"target\": " + target + ", \"amount\": " + amount + "}",
+                ContentType.APPLICATION_JSON);
+        request.setEntity(requestEntity);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         HttpEntity entity = response.getEntity();

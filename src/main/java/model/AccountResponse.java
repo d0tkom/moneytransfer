@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+// Model user receives when requesting account information
 public class AccountResponse extends  Account {
     public final BigDecimal balance;
 

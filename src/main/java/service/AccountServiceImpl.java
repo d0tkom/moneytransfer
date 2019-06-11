@@ -32,8 +32,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createAccount() {
-        String uuid = UUID.randomUUID().toString();
-        LocalDateTime created = LocalDateTime.now();
+        String uuid = UUID.randomUUID().toString(); // we assume UUIDs will never collide
+        LocalDateTime created = LocalDateTime.now(); // we don't handle different time zones
 
         Account account = new Account(uuid, created);
 
@@ -47,6 +47,8 @@ public class AccountServiceImpl implements AccountService {
         return db.accounts.values().stream().map((a) -> getAccountWithBalance(a.id, a.created)).collect(Collectors.toList());
     }
 
+    // This method emulates how we would calculate current balance using SQL. It iterates over a given account's transfers,
+    // and returns back the sum as the balance.
     private AccountResponse getAccountWithBalance(String id, LocalDateTime created) {
         BigDecimal balance = db.transfers.values().stream()
                 .map(t -> Objects.equals(t.source, id) ? t.amount.negate() : Objects.equals(t.target, id) ? t.amount : BigDecimal.ZERO)

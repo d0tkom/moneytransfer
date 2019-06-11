@@ -44,8 +44,10 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public Transfer transfer(String source, String target, BigDecimal amount) {
-        String uuid = UUID.randomUUID().toString();
-        Transfer transfer = new Transfer(uuid, source,target, amount, LocalDateTime.now());
+        String uuid = UUID.randomUUID().toString(); // we assume UUIDs will never collide
+        LocalDateTime created = LocalDateTime.now(); // we don't handle different time zones
+
+        Transfer transfer = new Transfer(uuid, source,target, amount, created);
 
         db.transfers.put(uuid, transfer);
 

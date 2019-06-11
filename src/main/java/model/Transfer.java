@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+// Model that we use to save transfers in our data store, and also to send back info about transfers
 public class Transfer {
     public final String id;
     public final String source;

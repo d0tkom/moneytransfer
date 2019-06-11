@@ -2,6 +2,7 @@ package model;
 
 import java.util.Objects;
 
+// Error message we send back as json if something goes wrong
 public class Error {
     public final String message;
 

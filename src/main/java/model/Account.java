@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+// Account model we actually store in our data store
 public class Account {
     public final String id;
     public final LocalDateTime created;

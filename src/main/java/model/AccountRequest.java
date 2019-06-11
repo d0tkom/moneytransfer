@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+// Model users use to create an account
 public class AccountRequest {
     public final BigDecimal balance;
 
