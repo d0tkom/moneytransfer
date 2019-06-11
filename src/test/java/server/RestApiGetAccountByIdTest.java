@@ -67,11 +67,11 @@ public class RestApiGetAccountByIdTest {
     public void getAccountByIdGetsBackSameAccount() throws IOException {
         AccountResponse createdAccount = restClient.postAccount();
 
-        AccountResponse returnedAccont = restClient.getAccountById(createdAccount.id);
+        AccountResponse returnedAccount = restClient.getAccountById(createdAccount.id);
 
         assertNotNull(createdAccount);
-        assertNotNull(returnedAccont);
-        assertEquals(createdAccount, returnedAccont);
+        assertNotNull(returnedAccount);
+        assertEquals(createdAccount, returnedAccount);
     }
 
     @Test
