@@ -52,20 +52,9 @@ public class TransferHandler {
             validator.validateSufficientBalance(source.balance, amount);
 
             return transferService.transfer(sourceId, targetId, amount);
-        } catch(AccountNotFoundException e) {
-            accountNotFoundException = e;
-        } catch(InsufficientFundsException e) {
-            insufficientFundsException = e;
         } finally {
             lock.unlock();
-
-            if (accountNotFoundException != null)
-                throw accountNotFoundException;
-
-            if (insufficientFundsException != null)
-                throw insufficientFundsException;
         }
 
-        return null;
     }
 }
